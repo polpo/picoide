@@ -103,6 +103,21 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f1/2a/8c3ac3d8bc94e6de8d7ae270bb5bc437b210bb9d6d9e46630c98f4abd20c/csscompressor-0.9.5.tar.gz", hash = "sha256:afa22badbcf3120a4f392e4d22f9fff485c044a1feda4a950ecc5eba9dd31a05", size = 237808, upload-time = "2017-11-26T21:13:08.238Z" }
 
 [[package]]
+name = "docs"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "mkdocs-material" },
+    { name = "mkdocs-minify-plugin" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "mkdocs-material", specifier = ">=9.7.1" },
+    { name = "mkdocs-minify-plugin", specifier = ">=0.8.0" },
+]
+
+[[package]]
 name = "ghp-import"
 version = "2.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -328,21 +343,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/ca/bc/f35b8446f4531a7cb215605d100cd88b7ac6f44ab3fc94870c120ab3adbf/pathspec-0.12.1.tar.gz", hash = "sha256:a482d51503a1ab33b1c67a6c3813a26953dbdc71c31dacaef9a838c4e29f5712", size = 51043, upload-time = "2023-12-10T22:30:45Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/cc/20/ff623b09d963f88bfde16306a54e12ee5ea43e9b597108672ff3a408aad6/pathspec-0.12.1-py3-none-any.whl", hash = "sha256:a0d503e138a4c123b27490a4f7beda6a01c6f288df0e4a8b79c7eb0dc7b4cc08", size = 31191, upload-time = "2023-12-10T22:30:43.14Z" },
-]
-
-[[package]]
-name = "picoide-docs"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "mkdocs-material" },
-    { name = "mkdocs-minify-plugin" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "mkdocs-material", specifier = ">=9.7.1" },
-    { name = "mkdocs-minify-plugin", specifier = ">=0.8.0" },
 ]
 
 [[package]]

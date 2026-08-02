@@ -37,11 +37,21 @@ The M/S/CS jumper block determines PicoIDE's device selection on the IDE bus:
 | **M** | Device 0 | Traditionally named "master" |
 | **S** | Device 1 | Traditionally named "slave" |
 | **CS** (cable select) | Auto | Position determined by cable |
-| **none** | 2-device | (future) Emulate primary and secondary devices simultaneously |
+| **none** | Dual-device | Emulate both devices on the channel simultaneously |
 
 !!! tip "Choosing a Position"
     - Use **M** if PicoIDE is the only device on the IDE channel
     - Use **CS** only if your IDE cable supports cable select (80-pin cables with blue/gray IDE connectors support cable select)
+    - Remove the jumper entirely for dual-device mode, described below
+
+### Dual-Device Mode
+
+With the jumper removed, PicoIDE emulates *both* devices on the IDE channel at once, from a single PicoIDE. Each can independently be a hard disk or a CD-ROM drive, so you can have two hard disks, two CD-ROM drives, or one of each.
+
+Each device is configured by its own section in `picoide.ini`: `[device0]` and `[device1]`. See [Configuration File](sd-card.md#configuration-file) for the details.
+
+!!! warning "PicoIDE must be alone on the IDE cable"
+    In dual-device mode PicoIDE occupies both device positions, so no other drive can share the IDE channel with it.
 
 ## Connections
 
@@ -81,7 +91,7 @@ To mount fully internally, use the more forward set of mounting holes on the sid
 This configuration is ideal if you don't have the optional front panel or if you prefer to manage images via the web interface over WiFi.
 
 !!! note "Headless Operation"
-    Without a front panel, PicoIDE automatically loads the first image found in the appropriate directory (`/cdrom` for ATAPI mode, `/hdd` for IDE mode) unless a specific image is configured in [`picoide.ini`](sd-card.md#configuration-file).
+    Without a front panel, PicoIDE automatically loads the first image found in the directory corresponding to the device mode (`/cdrom` for CD-ROM, `/hdd` for hard disk) unless a specific image is configured in [`picoide.ini`](sd-card.md#configuration-file).
 
     Disc images can be swapped via control apps like [pidectl](pidectl.md).
 
