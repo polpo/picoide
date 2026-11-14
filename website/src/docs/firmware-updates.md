@@ -17,14 +17,7 @@ with this program; if not, see <https://www.gnu.org/licenses/>.
 -->
 # Firmware Updates
 
-PicoIDE consists of two microcontrollers, each with its own firmware that is loaded independently but works in concert with the other. Because of this, the firmware download bundle includes both files, so please update both!
-
-## Overview
-
-| Component | Processor | Firmware File |
-|-----------|-----------|---------------|
-| Main Board | RP2350 | `picoide.uf2` |
-| Front Panel | ESP32-C3 | `picoide-frontpanel.bin` |
+PicoIDE when used with the front panel consists of two microcontrollers, each with its own firmware that work in concert with the other. The PicoIDE firmware bundles firmwares for both in a single `picoide.uf2` file and the update process updates both automatically.
 
 If a firmware update fails, the firmware will automatically be rolled back to the last known good version.
 
@@ -32,16 +25,14 @@ If a firmware update fails, the firmware will automatically be rolled back to th
 
 ### Via front panel
 
-1. Download and extract the latest firmware bundle at the [releases page](https://github.com/polpo/picoide/releases).
-1. Copy the `picoide.uf2` and `picoide-frontpanel.bin` files to the `/firmware` folder on your SD card
+1. Download and extract the latest firmware bundle at the [releases page](../releases.md).
+1. Copy `picoide.uf2` to the `/firmware` folder on your SD card
 2. Insert the SD card into PicoIDE
 3. Using the front panel, navigate to: **Settings > Firmware Update**
-4. Select **Main Board** and confirm the update
-5. Wait for the update to complete (progress shown on display)
-6. PicoIDE automatically reboots into the new firmware
-7. Select **Front Panel** and confirm the update
-8. Wait for the update to complete
-9. Front panel automatically reboots
+4. The panel shows the currently running version and the version on the SD card.
+5. Press the right button to continue.
+6. Wait for the update to complete (progress shown on display).
+7. PicoIDE automatically reboots into the new firmware
 
 ### Via pidectl
 
@@ -72,10 +63,10 @@ This shows:
 
 ### Update Not Detected
 
-- Verify the `picoide.uf2` and `picoide-frontpanel.bin` firmware files are in `/firmware/` directory
-- Try removing and reinserting the SD card
+- Verify the `picoide.uf2` firmware file is in the `/firmware/` directory on the SD card
+- Ensure the name is named exactly `picoide.uf2` (future firmware versions may make this more lenient)
 
 ### Update Fails
 
 - Try re-downloading the firmware file as it may be corrupted
-- Try a different, freshly formatted microSD card
+- Try a different microSD card, freshly formatted with the [SD Association Formatater](https://www.sdcard.org/downloads/formatter/)

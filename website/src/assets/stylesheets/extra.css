@@ -16,7 +16,9 @@ You should have received a copy of the GNU General Public License along
 with this program; if not, see <https://www.gnu.org/licenses/>.
 */
 
-:root {
+/* Our own "red" color for the theme */
+:root,
+[data-md-color-primary="red"] {
   --md-primary-fg-color: #dc2626;
   --md-primary-fg-color--light: #ef4444;
   --md-primary-fg-color--dark: #8b1821;
@@ -26,6 +28,7 @@ with this program; if not, see <https://www.gnu.org/licenses/>.
 [data-md-color-scheme="slate"] {
   --md-primary-fg-color: #dc2626;
   --md-accent-fg-color: #ef4444;
+  --md-typeset-a-color: #f87171;
 }
 
 /* Right-aligned figure with caption */
@@ -39,4 +42,37 @@ figure.figure-right figcaption {
   font-size: 0.85em;
   font-style: italic;
   color: var(--md-default-fg-color--light);
+}
+
+/* dark red header (same in light and dark mode) */
+.md-header {
+  color: var(--md-primary-bg-color);
+  background-color: #8b1821;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* larger text than the theme defaults for my old eyes */
+@media screen {
+  .md-typeset {
+    font-size: 0.8rem;
+  }
+
+  .md-typeset .admonition,
+  .md-typeset details {
+    font-size: 0.75rem;
+  }
+
+  .md-typeset table:not([class]) {
+    font-size: 0.75rem;
+  }
+
+  .md-tabs__link {
+    font-size: 0.75rem;
+  }
+}
+
+/* keep inline code from wrapping in tables */
+.md-typeset table:not([class]) code {
+  white-space: nowrap;
 }

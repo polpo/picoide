@@ -33,14 +33,14 @@ The following is an example directory structure on the SD card. `cdrom/` and `hd
 
 ```
 /
-├── cdrom/                      # CD-ROM images (ATAPI mode)
+├── cdrom/                      # CD-ROM images (ATAPI)
 │   ├── game.iso
 │   ├── album.cue
 │   ├── album.bin
 │   └── Big Game/               # Subdirectories supported
 │       └── Disc 1.iso
 │       └── Disc 2.iso
-├── hdd/                        # Hard disk images (IDE mode)
+├── hdd/                        # Hard disk images (IDE)
 │   ├── dos622.img
 │   └── windows98.vhd
 ├── firmware/                   # Firmware update files
@@ -51,7 +51,9 @@ The following is an example directory structure on the SD card. `cdrom/` and `hd
 
 ### Supported File Formats
 
-#### ATAPI Mode (CD-ROM)
+The file type of an image also determines which kind of device PicoIDE emulates for it. See [Configuration File](#configuration-file) for more detail.
+
+#### CD-ROM (ATAPI)
 
 | Extension | Description |
 |-----------|-------------|
@@ -62,7 +64,7 @@ The following is an example directory structure on the SD card. `cdrom/` and `hd
 !!! note "bin/cue Images"
     For bin/cue CD images, place the `.cue` file and all referenced `.bin` files in the same directory. PicoIDE supports audio tracks for CD music playback.
 
-#### IDE Mode (Hard Disk)
+#### Hard Disk (IDE)
 
 | Extension | Description |
 |-----------|-------------|
@@ -81,64 +83,72 @@ The following is an example directory structure on the SD card. `cdrom/` and `hd
 
 ## Configuration File
 
-The `picoide.ini` file controls device behavior and auto-loading. Place it in the root of your SD card. If you have the front panel installed, you can also edit this file from the [web interface](web-interface.md#configuration-editor).
+The `picoide.ini` file controls which devices PicoIDE emulates and which images they load at startup. PicoIDE will automatically generate one at the root of the SD card the first time it loads an image. If you have the front panel installed, you can edit this file from the [web interface](web-interface.md#configuration-editor).
+
+Each emulated device is described by its own section, `[device0]` and `[device1]`. Which of them are used depends on the M/S/CS jumper (see [Device Selection](getting-started.md#device-selection)):
+
+| Jumper | Sections used |
+|--------|---------------|
+| **M**, **S**, or **CS** (single-device mode) | `[device0]` only, which configures the one emulated device determined by the jumper. `[device1]` is ignored |
+| **none** (dual-device mode) | `[device0]` describes device 0 and `[device1]` describes device 1 |
 
 ### Example Configuration
+
+A single device that boots from a hard disk image:
 
 ```ini
 # PicoIDE Configuration File
 
-[device]
-# Device type: IDE (hard disk) or ATAPI (CD-ROM)
-type = ATAPI
-
-[ide]
-# Full path to hard disk image (leave empty for first found)
-image_path = /hdd/windows98.img
-
-# Directory to browse for hard disk images
-browse_dir = /hdd
-
-[atapi]
-# Full path to CD-ROM image (leave empty for first found)
-image_path = /cdrom/game.iso
-
-# Directory to browse for CD-ROM images
-browse_dir = /cdrom
-
-# Auto-load image at boot time
-auto_load = true
+[device0]
+image = /hdd/windows98.img
 ```
+
+PicoIDE determines the device type to emulate from the image's file extension, so in most cases the `image` line is all you need.
+
+In dual-device mode, add a `[device1]` section for the second device:
+
+```ini
+[device0]
+image = /hdd/windows98.img
+
+[device1]
+image = /cdrom/game.iso
+```
+
+This config has both a hard disk and a CD-ROM drive, but each device can independently be either type depending on what's in the .ini file.
 
 ### Configuration Reference
 
-#### `[device]` Section
+#### `[device0]` and `[device1]` Sections
 
 | Setting | Values | Default | Description |
 |---------|--------|---------|-------------|
-| `type` | `IDE`, `ATAPI` | `ATAPI` | Device emulation mode |
+| `image` | path | (empty) | Image to load at startup, and what the device type is inferred from. Empty = load the first image found alphabetically in `browse_dir` |
+| `type` | `cdrom`, `hdd` | `cdrom` | Which device to emulate. Usually unnecessary, as it's inferred from `image`, but if `image` is empty this will be used |
+| `browse_dir` | path | `/cdrom` or `/hdd`, depending on device type | Directory to browse for images, and to auto-load the first image from when `image` is empty |
+| `auto_load` | `true`, `false` | `true` | Load an image at startup. Set to `false` to start with an empty CD-ROM drive |
 
-#### `[ide]` Section
+Device type is inferred from the file type of `image`:
 
-| Setting | Description |
-|---------|-------------|
-| `image_path` | Full path to auto-load (empty = first alphabetically in browse_dir) |
-| `browse_dir` | Directory for image browsing (default: `/hdd`) |
+| Image file type | Device emulated |
+|-----------------|-----------------|
+| `.iso`, `.cue`, `.toast` | CD-ROM (ATAPI) |
+| `.img`, `.vhd`, `.hda`, `.hdf` | Hard disk (IDE) |
 
-#### `[atapi]` Section
+Set `type` explicitly when there's no image to infer from, for example if you want an empty CD-ROM drive that you'll load a disc into later from the front panel:
 
-| Setting | Description |
-|---------|-------------|
-| `image_path` | Full path to auto-load (empty = first alphabetically in browse_dir) |
-| `browse_dir` | Directory for image browsing (default: `/cdrom`) |
-| `auto_load` | `true`, `false` | `true` | Load image automatically at boot |
+```ini
+[device0]
+type = cdrom
+auto_load = false
+```
 
-!!! info "Auto `image_path` Updating"
-    When you select a different image using the front panel or host control, the configuration file is automatically updated to remember your selection.
+!!! info "Automatic `image` Updating"
+    When you select a different image using the front panel, web interface, or host control, that device's `image` setting is automatically updated to remember your selection.
 
 #### `[overrides]` Section
 
-Advanced settings to override the maximum transfer mode, IDENTIFY responses, etc. These are primarily useful for troubleshooting compatibility issues with certain vintage computers.
+Advanced settings to override the maximum transfer mode, IDENTIFY responses, etc. to fix compatibility issues with certain vintage computers. They apply to the IDE bus as a whole, so in dual-device mode both devices share them.
 
 | Setting | Values | Default | Description |
 |---------|--------|---------|-------------|
@@ -146,6 +156,7 @@ Advanced settings to override the maximum transfer mode, IDENTIFY responses, etc
 | `max_mwdma_mode` | `0`-`2` or `-1` | `2` | Maximum Multi-word DMA mode (`-1` disables DMA) |
 | `disable_iordy` | `true`, `false` | `false` | Disable IORDY flow control |
 | `sector_delay_us` | `0`-`1000` | `0` | Delay in microseconds between sectors during multi-sector PIO reads |
+| `mwdma_cycle_time` | `120`-`1200` or `0` | `0` | Multi-word DMA cycle time in ns (`0` = standard minimum for the advertised mode) |
 | `bus_delay` | `1.0`-`6.0` | `1.0` | Bus timing delay factor for slow or noisy IDE buses |
 
 Example for forcing PIO-only operation:
@@ -166,6 +177,12 @@ Example for fixing hangs during boot on systems with BIOSes that expect to see B
 sector_delay_us = 100
 ```
 
+Example for the beige Power Macintosh G3, which needs slightly slower Multi-word DMA burst timing than the 120ns default:
+```ini
+[overrides]
+mwdma_cycle_time = 180
+```
+
 Example for slowing bus timing on very old systems (e.g., IBM 5170):
 ```ini
 [overrides]
@@ -174,15 +191,16 @@ bus_delay = 6.0
 
 ## Auto-Mount Behavior
 
-When `auto_load` is enabled in ATAPI mode:
+Each device mounts an image at startup independently, following its own section:
 
-- **With `image_path` set**: Loads the specified image
-- **With `image_path` empty**: Loads the first image found alphabetically in the browse directory
+- **With `image` set**: Loads that image. If it can't be loaded, falls back to the first image found in the browse directory
+- **With `image` empty**: Loads the first image found alphabetically in the browse directory
+- **With `auto_load = false`**: Loads nothing, leaving an empty CD-ROM drive
 
 This allows for completely headless operation - just power on and the configured image is ready.
 
-!!! note "Auto-mount in IDE mode"
-    If the device is in IDE mode and an image cannot be loaded, it will result in an error as PicoIDE only supports emulating a fixed (non-removable) disk.
+!!! note "Auto-mount for hard disks"
+    If a hard disk device can't load an image, the host will see errors, as PicoIDE currently only supports emulating a fixed (non-removable) disk. `auto_load = false` is only useful for CD-ROM devices.
 
 ## Tips
 

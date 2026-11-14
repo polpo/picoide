@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{#- Open Graph / Twitter cards for link previews on social sites -#}
+{% block extrahead %}
+  {%- if page.meta and page.meta.title -%}
+    {%- set og_title = page.meta.title ~ " - " ~ config.site_name -%}
+  {%- elif page.title -%}
+    {%- set og_title = (page.title | striptags) ~ " - " ~ config.site_name -%}
+  {%- else -%}
+    {%- set og_title = config.site_name -%}
+  {%- endif -%}
+  {%- if page.meta and page.meta.description -%}
+    {%- set og_description = page.meta.description -%}
+  {%- else -%}
+    {%- set og_description = config.site_description -%}
+  {%- endif %}
+  <meta property="og:type" content="website">
+  {%- if page.canonical_url %}
+  <meta property="og:url" content="{{ page.canonical_url }}">
+  {%- endif %}
+  <meta property="og:title" content="{{ og_title }}">
+  <meta property="og:description" content="{{ og_description }}">
+  <meta property="og:image" content="{{ config.site_url }}picoide-on-stack.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ og_title }}">
+  <meta name="twitter:description" content="{{ og_description }}">
+  <meta name="twitter:image" content="{{ config.site_url }}picoide-on-stack.jpg">
+{% endblock %}

@@ -1,3 +1,7 @@
+---
+title: Documentation
+---
+
 <!---
 SPDX-License-Identifier: GPL-2.0-only
 
@@ -28,6 +32,7 @@ with this program; if not, see <https://www.gnu.org/licenses/>.
 
 - **ATAPI CD-ROM Emulation** - Mount `.iso` and `.cue/.bin` CD images with audio track support using built-in DAC
 - **IDE Hard Disk Emulation** - Mount `.vhd`, `.img`, and other raw disk images with LBA or arbitrary CHS
+- **Dual-Device Mode** - Emulate two devices at once from a single PicoIDE, in any combination of hard disks and CD-ROM drives
 - **Front Panel** - (optional) OLED display with 4-button navigation and WiFi radio
 - **Web Interface** - (optional) Swap and upload images over WiFi
 - **Host control** - Control PicoIDE with apps on your host system (DOS only for now)

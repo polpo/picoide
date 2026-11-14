@@ -25,16 +25,22 @@ On first boot (or after a WiFi reset), the front panel creates its own WiFi acce
 
 | Setting | Value |
 |---------|-------|
-| **SSID** | `PicoIDE-FrontPanel` |
-| **Password** | `frontpanel123` |
+| **SSID** | `PicoIDE-FrontPanel-XXXX` (XXXX = last 2 bytes of the PicoIDE's WiFi MAC address) |
+| **Password** | 8 lowercase letters (generated randomly on first boot, see ["Finding Your Device's SSID and Password"](#finding-your-devices-ssid-and-password)) |
 | **IP Address** | `192.168.4.1` |
 | **Hostname (Zeroconf/mDNS)** | `picoide.local` |
 
+> **Note:** Each device has a unique default SSID to prevent conflicts if you have multiple. The password is random to meet security standards. 
+
+### Finding Your Device's SSID and Password
+
+Power on your PicoIDE and go to Settings > WiFi > WiFi Status. If the front panel is in AP mode it will show the current SSID and password.
+
 ### Connecting to the Access Point
 
-1. On your computer or phone, connect to the `PicoIDE-FrontPanel` WiFi network
-2. Enter password: `frontpanel123`
-3. Open a web browser and navigate to [`http://picoide.local`](http://picoide.local) or [`http://192.168.4.1`](http://192.168.4.1)
+1. On your computer or phone, connect to the `PicoIDE-FrontPanel-XXXX` WiFi network
+2. Enter the 8-letter password shown on the WiFi Status screen
+3. Open a web browser and navigate to [`http://picoide.local`](http://picoide.local) or [`http://192.168.4.1`](http://192.168.4.1). Some web browsers like to silently use `https` instead of `http` so double check that.
 
 ## Connecting to Your Network
 
@@ -45,6 +51,8 @@ To connect PicoIDE to your existing WiFi network:
 3. Select your network from the list
 4. Enter your network password
 5. Click **Connect**
+
+Or manually enter the SSID and password in the boxes.
 
 Once connected, PicoIDE will:
 
@@ -76,14 +84,16 @@ Upload new images directly to your SD card:
 4. Monitor upload progress (speed and ETA displayed)
 5. File integrity is automatically verified after upload
 
-Files are uploaded to the currently browsed directory. With good WiFi reception, uploads run at approximately 6-10 Mbps.
+Files are uploaded to the currently browsed directory. With good WiFi reception on firmware v1.0.0, uploads run at approximately 6-10 Mbps (much faster uploads are coming soon in a future firmware update).
 
 ### WiFi Settings
 
-- View current connection status
+- View current connection status (SSID, IP address, signal strength)
 - Scan for available networks
 - Connect to a different network
-- Reset WiFi to access point mode
+- Change access point SSID
+- Change mDNS hostname
+- Reset to access point mode with default credentials
 
 ### Configuration Editor
 
@@ -96,27 +106,26 @@ This is useful for adjusting settings like device type (IDE or ATAPI), browse di
 Update both the main board and front panel firmware from the web interface:
 
 1. Place firmware files in the `/firmware/` folder on your SD card, either directly or uploading via the SD card browser
-3. Refer to the **Firmware Update** section of the web interface to see current and available versions on the SD card
-4. Click **Update** for the component you want to update
-5. Wait for the update to complete
+2. In the **Firmware Update** section of the web interface, the currently running firmware version and the version on the SD card are shown
+3. Click **Update** and wait for the update to complete. Note that the WiFi will be interrupted.
 
-The web interface shows update progress and automatically detects when the device has rebooted with the new firmware. Note that updating the front panel from the web interface may be a bit buggy, so updating from the front panel controls is recommended. Don't worry, if the update fails, it will automatically roll back to the last known good firmware version.
+The web interface shows update progress and should automatically detect when the device has rebooted with the new firmware. Note that updating the front panel from the web interface may be a bit buggy, so updating from the front panel controls is recommended. Don't worry, if the update fails, it will automatically roll back to the last known good firmware version.
 
 ## Resetting WiFi
 
-If you need to reset WiFi so it can be reconfigured:
+If you need to reset WiFi settings so it can be reconfigured:
 
 ### From Front Panel
 
 1. Navigate to Settings > WiFi > Reset WiFi
 2. Confirm the reset
-3. PicoIDE restarts in access point mode
+3. PicoIDE restarts in access point mode with your device-specific default credentials
 
 ### From Web Interface
 
 1. Find WiFi Settings
 2. Click **Reset to AP Mode**
-3. Reconnect using the default credentials
+3. Reconnect using the default credentials for your device (see [Initial WiFi Setup]](web-interface.md#initial-wifi-setup))
 
 ## WiFi/Network Specs
 
