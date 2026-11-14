@@ -37,7 +37,7 @@ def demote_headings(markdown):
 def render_release(release, asset):
     date = datetime.fromisoformat(release["published_at"].replace("Z", "+00:00"))
     name = release.get("name") or release["tag_name"]
-    yield f"## {name} <small>{date:%-d %B %Y}</small> {{ #{release['tag_name']} }}"
+    yield f"## {name} <small>{date:%Y-%m-%d}</small> {{ #{release['tag_name']} }}"
     yield (
         f"[:material-download: Download {asset['name']}]({asset['browser_download_url']})"
         "{ .md-button .md-button--primary }"

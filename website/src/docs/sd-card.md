@@ -72,6 +72,7 @@ The file type of an image also determines which kind of device PicoIDE emulates 
 | `.img` | Raw disk image |
 | `.hda` | Raw disk image |
 | `.hdf` | Raw disk image (Amiga, RDB format only) |
+| `.raw` | Raw disk image |
 
 !!! note "VHD Images"
     Only fixed VHD images are supported. Dynamic and differencing VHD images will not work.
@@ -133,7 +134,7 @@ Device type is inferred from the file type of `image`:
 | Image file type | Device emulated |
 |-----------------|-----------------|
 | `.iso`, `.cue`, `.toast` | CD-ROM (ATAPI) |
-| `.img`, `.vhd`, `.hda`, `.hdf` | Hard disk (IDE) |
+| `.img`, `.vhd`, `.hda`, `.hdf`, `.raw` | Hard disk (IDE) |
 
 Set `type` explicitly when there's no image to infer from, for example if you want an empty CD-ROM drive that you'll load a disc into later from the front panel:
 
@@ -146,9 +147,69 @@ auto_load = false
 !!! info "Automatic `image` Updating"
     When you select a different image using the front panel, web interface, or host control, that device's `image` setting is automatically updated to remember your selection.
 
+##### Hard Disk Geometry
+
+By default, a hard disk's geometry (cylinders, heads and sectors per track) is derived from the image itself, using the following methods in order:
+
+1. If the image is a fixed VHD, the image's own built-in geometry
+2. If the image has an MBR partition table, the geometry it was written with
+3. Otherwise, the geometry is calculated from the image size.
+
+Geometries larger than the ATA limit of 16383 cylinders, 16 heads and 63 sectors per track are reported as 16383/16/63.
+
+To override this, the following options can be added to the image's `[device0]` or `[device1]` section:
+
+| Setting | Values | Description |
+|---------|--------|-------------|
+| `heads` | `1`-`16` | Number of heads |
+| `sectors` | `1`-`255` | Sectors per track |
+| `cylinders` | `1`-`65535` | Number of cylinders. Optional: if omitted, it's calculated from the image size |
+
+`heads` and `sectors` must both be set, or the geometry override is ignored. For example, NEC PC-9821 machines expect IDE hard disks up to about 4.5 GB to use 8 heads and 17 sectors per track, rather than the common 16 heads and 63 sectors:
+
+```ini
+[device0]
+image = /hdd/pc98.img
+heads = 8
+sectors = 17
+```
+
+With `cylinders` left out, it's calculated from the image size.
+
+!!! warning "Geometry larger than the image"
+    If you set `cylinders` explicitly, PicoIDE uses it even if cylinders * heads * sectors is larger than the image. The host will see errors when it tries to access the sectors past the end of the image.
+
+##### Drive Identity
+
+Each device reports a model name, firmware revision and serial number to the host. CD-ROM drives also report a vendor, product and revision. Some software and drivers check these, so you can override them per device:
+
+| Setting | Max length | Default | Description |
+|---------|------------|---------|-------------|
+| `model` | 40 | `PicoIDE Hard Disk` or `PicoIDE Totally Legit CD-ROM drive` | Model name |
+| `revision` | 8 | `v1.0.0` (hard disk) or `v420.69` (CD-ROM) | Firmware revision |
+| `serial` | 20 | The PicoIDE board's unique ID | Serial number |
+| `vendor` | 8 | `PicoIDE` | CD-ROM only: vendor name |
+| `product` | 16 | `Virtual CD-ROM` | CD-ROM only: product name |
+| `product_revision` | 4 | `1234` | CD-ROM only: product revision |
+
+Longer values are cut off at the maximum length. For example, the Konami System 573 arcade platform shipped with a Matsushita CR-58x CD-ROM drive. To make PicoIDE identify as that drive:
+
+```ini
+[device0]
+image = /cdrom/ddr.cue
+model = MATSHITA CR-589
+revision = 1.0
+vendor = MATSHITA
+product = CD-ROM CR-589
+product_revision = GS0N
+```
+
+!!! note "Serial numbers in dual-device mode"
+    Unless `serial` is set, both devices report the same serial number, the board's unique ID.
+
 #### `[overrides]` Section
 
-Advanced settings to override the maximum transfer mode, IDENTIFY responses, etc. to fix compatibility issues with certain vintage computers. They apply to the IDE bus as a whole, so in dual-device mode both devices share them.
+Advanced settings to override the maximum transfer mode, bus timing, logging, etc. to fix compatibility issues with certain vintage computers. They apply to the IDE bus as a whole, so in dual-device mode both devices share them. To change what a drive identifies itself as, see [Drive Identity](#drive-identity).
 
 | Setting | Values | Default | Description |
 |---------|--------|---------|-------------|
@@ -157,7 +218,10 @@ Advanced settings to override the maximum transfer mode, IDENTIFY responses, etc
 | `disable_iordy` | `true`, `false` | `false` | Disable IORDY flow control |
 | `sector_delay_us` | `0`-`1000` | `0` | Delay in microseconds between sectors during multi-sector PIO reads |
 | `mwdma_cycle_time` | `120`-`1200` or `0` | `0` | Multi-word DMA cycle time in ns (`0` = standard minimum for the advertised mode) |
-| `bus_delay` | `1.0`-`6.0` | `1.0` | Bus timing delay factor for slow or noisy IDE buses |
+| `atapi_complete_delay_us` | `0`-`10000` | `1000` | Delay in microseconds before a CD-ROM finishes a short command while DMA is enabled. Gives slow host drivers time to get ready for the interrupt (for example the VIA VT6421 Windows 9x driver) |
+| `bus_delay` | `1`-`6` | `1` | Bus timing delay factor for slow or noisy IDE buses. Values above `2` also limit PIO to mode 2 |
+| `log` | `true`, `false` | `true` | Write a log to `log.txt` on the SD card. The previous boot's log is kept as `lastlog.txt` |
+| `debug` | `true`, `false` | `false` | Add detailed debug messages to the log |
 
 Example for forcing PIO-only operation:
 ```ini
@@ -186,7 +250,7 @@ mwdma_cycle_time = 180
 Example for slowing bus timing on very old systems (e.g., IBM 5170):
 ```ini
 [overrides]
-bus_delay = 6.0
+bus_delay = 6
 ```
 
 ## Auto-Mount Behavior
