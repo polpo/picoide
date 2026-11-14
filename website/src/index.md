@@ -92,7 +92,7 @@ PicoIDE is a device that emulates IDE/ATAPI devices developed by Ian Scott, crea
 ???+ question "What about UDMA support?"
     In the interest of limiting development scope for the first release, PicoIDE's hardware doesn't support UDMA, but faster systems are very well served in the area of fast HDD replacements by CF, SD, and M.2 to IDE adapters, and for optical, PicoIDE's MWDMA mode 2 and PIO mode 4 support can be as fast as a 100X CD-ROM drive, plenty for fast systems.
 
-???+ question "Will there be a 5.25\" or 2.5\" version?"
+???+ question "Will there be a 5.25&quot; or 2.5&quot; version?"
     PicoIDE will launch with a 3.5" enclosure only, but depending how things go, other form factors may be made available.
 
 ???+ question "When will PicoIDE be available?"
