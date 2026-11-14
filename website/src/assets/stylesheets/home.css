@@ -1,0 +1,139 @@
+.home-header {
+  text-align: center;
+  padding: 1rem 0 0.5rem;
+}
+
+.md-typeset .home-logo {
+  width: 500px;
+  max-width: 100%;
+}
+
+.md-typeset .home-tagline {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+.home-banner {
+  background: #8b1821;
+  color: white;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0 1rem;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.md-typeset .home-banner a {
+  color: white;
+  text-decoration: underline;
+}
+
+.md-typeset .home-intro {
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.home-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.md-typeset .home-hero ul {
+  font-size: 0.9rem;
+}
+
+.home-hero img,
+.home-gallery img {
+  display: block;
+  width: 100%;
+  border-radius: 4px;
+  box-shadow: var(--md-shadow-z1);
+}
+
+/* space out the theme's built-in .grid layout */
+.md-typeset .home-gallery {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.md-typeset .home-gallery > p {
+  margin: 0;
+}
+
+.home-social {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  background: var(--md-code-bg-color);
+  padding: 1.5rem 2rem;
+  border-radius: 4px;
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.home-social > div:first-child {
+  flex: 1;
+}
+
+.md-typeset .home-social h2 {
+  margin-top: 0;
+}
+
+.md-typeset .home-social .md-button {
+  margin: 0.25rem;
+}
+
+.home-mascot {
+  flex: 0 0 160px;
+}
+
+.md-typeset .home-mascot p {
+  margin: 0;
+}
+
+.home-mascot img {
+  display: block;
+  width: 100%;
+}
+
+@media screen and (max-width: 44.984375em) {
+  .md-typeset .home-gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .home-social {
+    flex-direction: column;
+  }
+
+  .home-mascot {
+    flex-basis: auto;
+    width: 100px;
+  }
+}
+
+/* for the main page, recolor the theme's green "question" boxes to the site red */
+.md-typeset .admonition.question,
+.md-typeset details.question {
+  background-color: color-mix(in srgb, var(--md-primary-fg-color) 10%, transparent);
+}
+
+.md-typeset .question > .admonition-title::before,
+.md-typeset .question > summary::before {
+  background-color: var(--md-primary-fg-color);
+}
+
+.md-typeset .question > .admonition-title::after,
+.md-typeset .question > summary::after {
+  color: var(--md-primary-fg-color);
+}

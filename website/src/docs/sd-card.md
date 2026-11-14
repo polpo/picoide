@@ -83,7 +83,7 @@ The file type of an image also determines which kind of device PicoIDE emulates 
 
 ## Configuration File
 
-The `picoide.ini` file controls which devices PicoIDE emulates and which images they load at startup. Place it in the root of your SD card. If you have the front panel installed, you can also edit this file from the [web interface](web-interface.md#configuration-editor).
+The `picoide.ini` file controls which devices PicoIDE emulates and which images they load at startup. PicoIDE will automatically generate one at the root of the SD card the first time it loads an image. If you have the front panel installed, you can edit this file from the [web interface](web-interface.md#configuration-editor).
 
 Each emulated device is described by its own section, `[device0]` and `[device1]`. Which of them are used depends on the M/S/CS jumper (see [Device Selection](getting-started.md#device-selection)):
 

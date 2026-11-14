@@ -50,18 +50,24 @@ With the jumper removed, PicoIDE emulates *both* devices on the IDE channel at o
 
 Each device is configured by its own section in `picoide.ini`: `[device0]` and `[device1]`. See [Configuration File](sd-card.md#configuration-file) for the details.
 
-!!! warning "PicoIDE must be alone on the IDE cable"
-    In dual-device mode PicoIDE occupies both device positions, so no other drive can share the IDE channel with it.
+!!! warning "In dual mode, PicoIDE must be the only device on the cable"
+    In dual-device mode PicoIDE occupies both device positions, so no other drive can share the IDE cable with it.
+
+!!! danger "Don't park the jumper shunt on the jumper block in dual mode"
+    Be careful as two of the pins on the jumper block are +5V and ground. If you park the jumper shunt across them it will cause a short, so in dual mode it's best to leave the jumper off completely.
 
 ## Connections
 
 ### IDE Cable
 
-Connect the IDE ribbon cable between PicoIDE and your computer's motherboard or IDE controller card. The connector is keyed, but some cables are not, so make sure pin 1 is aligned correctly: match the stripe on the cable edge that indicates pin 1 with the pin 1 marking on both the PicoIDE (a triangle, on the side of the connector closest to the power connector) and your computer's IDE connector.
+Connect the IDE ribbon cable between PicoIDE and your computer's motherboard or IDE controller card. The connector is keyed, but some cables are not, so make sure pin 1 is aligned correctly: match the stripe on the cable edge that indicates pin 1 with the pin 1 marking on both the PicoIDE (a triangle and a number `1`, which are the side of the connector closest to the power connector) and your computer's IDE connector.
 
 ### Power
 
 Connect a standard 4-pin floppy/Berg power connector from your computer's power supply. PicoIDE only uses the +5V rail on this connector. If your power supply doesn't have a floppy power connector, use an adapter.
+
+!!! danger "Make sure the connector is oriented correctly"
+    Some floppy power cables don't have the best keying, so please ensure it's oriented correctly to avoid damage to the PicoIDE!
 
 ### Audio connectors
 
@@ -97,7 +103,7 @@ This configuration is ideal if you don't have the optional front panel or if you
 
 ## First Boot
 
-1. Insert the prepared microSD card (see [SD Card Setup](sd-card.md)) (note, hot swap of cards will be supported on final release) 
+1. Insert the prepared microSD card (see [SD Card Setup](sd-card.md))
 2. Power on the computer
 4. The BIOS should detect PicoIDE as an IDE hard disk or ATAPI CD-ROM depending on your configuration
 
