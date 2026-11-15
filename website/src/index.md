@@ -8,7 +8,8 @@ hide:
 
 <div class="home-header" markdown>
 
-![PicoIDE](picoide-logo-light-dark-mode.svg){ .home-logo }
+![PicoIDE](picoide-logo-light.svg#only-light){ .home-logo }
+![PicoIDE](picoide-logo-dark.svg#only-dark){ .home-logo }
 
 An open IDE/ATAPI drive emulator
 { .home-tagline }
