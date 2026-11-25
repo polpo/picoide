@@ -1,0 +1,6 @@
+# Cloudflare Pages redirects: https://developers.cloudflare.com/pages/configuration/redirects/
+/source        https://github.com/polpo/picoide 302
+/security      https://polpotronics.com/picoide/security 302
+/updates       /releases/ 302
+/regulatory    https://polpotronics.com/picoide/regulatory 302
+/regulatory/*  https://polpotronics.com/picoide/regulatory/:splat 302
