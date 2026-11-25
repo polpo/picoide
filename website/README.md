@@ -20,7 +20,7 @@ $ uv run zensical serve
 
 The releases list is fetched from the GitHub API on every build, including each live-reload rebuild. Without a token GitHub allows 60 requests an hour so if you hit that, the page shows a warning instead of the list. Run with `GH_TOKEN=$(gh auth token)` to authenticate and raise the limit.
 
-On every push to `main`, GitHub Actions (`.github/workflows/pages.yml`) builds the site and publishes it to GitHub Pages. Publishing, editing or deleting a release also triggers a rebuild (`.github/workflows/releases.yml`).
+On every push to `main`, GitHub Actions (`.github/workflows/pages.yml`) builds the site and publishes it to Cloudflare Pages, and branches/pull requests get a preview page. Publishing, editing or deleting a release also triggers a rebuild (`.github/workflows/releases.yml`).
 
 ## License
 
