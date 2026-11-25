@@ -24,4 +24,4 @@ On every push to `main`, GitHub Actions (`.github/workflows/pages.yml`) builds t
 
 ## License
 
-The PicoIDE documentation source is licensed under the GNU GPL v2 (see LICENSE).
+The PicoIDE documentation source is licensed under CC BY-SA 4.0 (see LICENSE).
